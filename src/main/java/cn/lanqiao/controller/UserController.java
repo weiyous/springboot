@@ -118,7 +118,7 @@ public class UserController {
 				map.put("status", 200);
 				map.put("msg", "删除成功");
 			}else {
-				map.put("status", 0);
+				map.put("status", 10);
 				map.put("msg", "删除失败");
 			}
 		return map;
