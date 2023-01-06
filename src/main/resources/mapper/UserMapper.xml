@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lanqiao.mapper.UserMapper">
+	<select id="getuseruloginid" resultType="user" >
+		select * from t_users  where  uloginid=#{uloginid}
+	</select>
+	
+	<select id="getBillByUid" resultType="bill"  parameterType="int">
+		select * from t_bill  where  uid=#{uid}
+	</select>
+	
+	
+	<!-- 用户分页 -->
+	<select id="userpager" resultType="user" parameterType="map">
+		select * from t_users   limit  #{startindex},#{offset} 
+	</select>
+	
+	<select id="ProfitPager" resultType="profit" parameterType="map">
+		select * from t_profit   limit  #{startindex},#{offset} 
+	</select>
+	
+	<select id="selectProfit" resultType="profit">
+		select * from t_profit  
+	</select>
+	
+		<!-- 取出所有bill -->
+	<select id="allBill" resultType="bill" parameterType="map">
+		select * from t_bill where month=#{month};
+	</select>
+	
+		<!-- 薪资申请分页 -->
+	<select id="applicationFromPager" resultType="applicationFrom" parameterType="map">
+	select * from t_applicationfrom limit  #{startindex},#{offset} 
+	</select>
+	
+		<!-- 账单分页 -->
+	<select id="BillPager" resultType="Bill" parameterType="map">
+	select * from t_bill  where uname like '%${searchKey}%' limit  #{startindex},#{offset} 
+	</select>
+	
+	
+	<select id="count" resultType="int" >
+		select count(*) from t_users 
+	</select>
+	
+	<select id="countprofit" resultType="int" >
+		select count(*) from t_profit 
+	</select>
+	
+	
+	<select id="countApplication" resultType="int" >
+		select count(*) from t_applicationfrom;
+	</select>
+		
+	<select id="countBill" resultType="int" >
+		select count(*) from t_bill where uname like '%${searchKey}%'
+	</select>
+
+	<delete id="deleteBill" parameterType="int">
+		delete  from t_bill where uid=#{uid}
+	</delete>
+	
+	<delete id="deleteApprove" parameterType="int">
+		delete  from t_applicationfrom where uid=#{uid}
+	</delete>
+	
+	<delete id="removeBillByUid" parameterType="int">
+		delete  from t_bill where uid=#{uid}
+	</delete>
+	
+	
+	<delete id="deleteUser" parameterType="int">
+		delete  from t_users where uid=#{uid}
+	</delete>
+	
+	<delete id="deleteProfit" parameterType="String">
+		delete  from t_profit where project=#{project}
+	</delete>
+	
+	<insert id="userRegister" parameterType="User" >
+  		    insert into t_users(uloginid,upassword,usex,utel,uaddress,uname,uemail,udate,ubalance)
+  		    values(#{uloginid},#{upassword},#{usex},#{utel},#{uaddress},#{uname},#{uemail},#{udate},#{ubalance})
+	</insert>
+	
+	<insert id="insertintobill" >
+	INSERT INTO `t_profit` 
+	VALUES ('一丶营业收入', '35511', '30415');
+	</insert>
+		<update id="updateUser"  >
+			update t_users set 
+			uloginid=#{uloginid},
+			upassword=#{upassword},
+			usex=#{usex},
+			utel=#{utel},
+			uaddress=#{uaddress},
+			uname=#{uname},
+			uemail=#{uemail},
+			udate=#{udate}
+			where uid=#{uid}
+	    </update>
+	    
+	    <update id="updateBillDate"  parameterType="Bill" >
+			update t_bill  set 
+			uname=#{uname},
+			uduty=#{uduty},
+			urank=#{urank},
+			uidentify=#{uidentify},
+			ubankCar=#{ubankCar},
+			uperson=#{uperson},
+			ustatus=#{ustatus},
+			umoney=#{umoney},
+			udate=#{udate},
+			month=#{month}
+			where uid=#{uid}
+	    </update>
+	    
+	    <!-- 修改bill的status状态 -->
+	    <update id="updateBill"  parameterType="int">
+			update t_bill  set  ustatus="已发"  where uid=#{uid}
+	    </update>
+	    
+	    
+	<!--预发薪资信息存储 --> 
+	<insert id="addApplicationFrom" parameterType="applicationfrom" >
+  		    insert into t_applicationfrom(uname,usex,utel,uidentify,ulistnumber,udate,urequestMoney,person)
+  		    values(#{uname},#{usex},#{utel},#{uidentify},#{ulistnumber},#{udate},#{urequestMoney},#{person})
+	</insert>
+	
+	<!-- 添加bill数据 -->
+	<insert id="addDateBill"  parameterType="bill" >
+  		    insert into t_bill(uname,uduty,urank,uidentify,ubankCar,udate,umoney,month,uperson,ustatus)
+  		    values(#{uname},#{uduty},#{urank},#{uidentify},#{ubankCar},#{udate},#{umoney},#{month},#{uperson},#{ustatus})
+	</insert>
+	
+	<!-- 添加账单数据 -->
+	<insert id="addProfitDate"  parameterType="profit" >
+  		    insert into  t_profit(project,amountNow,amountLast)
+  		    values(#{project},#{amountNow},#{amountLast})
+	</insert>
+	
+	<!-- 修改profit-->
+	<update id="updateProfit"  parameterType="profit">
+		update t_profit set  project=#{project},amountNow=#{amountNow},amountLast=#{amountLast} where uid=#{uid};
+	</update>
+	
+	<!--商品注册添加-->
+	<insert id="addGoodTableImg"  parameterType="goodtableimg" >
+  		    insert into  bs_GoodTableImg(good_id,pk_goodtype,good_name,good_area,supplier_name,
+  		    supplier_address,supplier_contact,good_price,putaway_date,good_introduce)
+  		    values(#{good_id},#{pk_goodtype},#{good_name},#{good_area},#{supplier_name},
+  		    #{supplier_address},#{supplier_contact},#{good_price},#{putaway_date},#{good_introduce})
+	</insert>
+	
+		<!--商品列表总数-->
+	<select id="countGoodTableImg" resultType="int" >
+		select count(*) from bs_goodtableimg where good_name  like '%${searchKey}%'
+	</select>
+	
+	<!-- 商品列表分页 -->
+	<select id="GoodTableImgPager" resultType="goodtableimg" parameterType="map">
+	select * from bs_goodtableimg  where good_name like '%${searchKey}%' limit  #{startindex},#{offset} 
+	</select>
+	
+	<!-- 删除商品列表商品 -->
+	<delete id="deleteGoodTableImg" parameterType="String">
+		delete  from bs_goodtableimg where good_id=#{good_id}
+	</delete>
+	
+	<!-- 获取GoodTableImg信息 -->
+	<select id="getGoodTableImg" resultType="goodtableimg" >
+		select * from bs_goodtableimg 
+	</select>
+</mapper>
